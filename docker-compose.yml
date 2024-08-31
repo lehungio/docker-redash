@@ -1,50 +1,45 @@
-# https://redash.io/help/open-source/setup/#docker
-# https://github.com/getredash/setup/blob/master/data/compose.yaml
-x-redash-service: &redash-service
-  image: redash/redash:latest
-  depends_on:
-    - postgres
-    - redis
-  env_file: /opt/redash/env
-  restart: always
+# https://github.com/getredash/redash/wiki/Local-development-setup
 services:
+  # docker-compose run --rm server create_db
   server:
-    <<: *redash-service
+    image: redash/redash:latest
     command: server
+    depends_on:
+      - postgres
+      - redis
     ports:
-      - "5000:5000"
+      - "35000:5000"
     environment:
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      REDASH_COOKIE_SECRET: REDASH_COOKIE_SECRET
       REDASH_WEB_WORKERS: 4
-  scheduler:
-    <<: *redash-service
+      REDASH_MAIL_SERVER: "smtp2http"
+      REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+  
+  worker:
+    image: redash/redash:latest
     command: scheduler
-    depends_on:
-      - server
-  scheduled_worker:
-    <<: *redash-service
-    command: worker
-    depends_on:
-      - server
     environment:
-      QUEUES: "scheduled_queries,schemas"
-      WORKERS_COUNT: 1
-  adhoc_worker:
-    <<: *redash-service
-    command: worker
-    depends_on:
-      - server
-    environment:
-      QUEUES: "queries"
+      PYTHONUNBUFFERED: 0
+      REDASH_LOG_LEVEL: "INFO"
+      REDASH_REDIS_URL: "redis://redis:6379/0"
+      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      QUEUES: "queries,scheduled_queries,celery"
       WORKERS_COUNT: 2
+      REDASH_MAIL_SERVER: "smtp2http"
+      REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+  
   redis:
-    image: redis:7-alpine
-    restart: unless-stopped
+    image: redis:3.0-alpine
+
   postgres:
-    image: pgautoupgrade/pgautoupgrade:latest
-    env_file: /opt/redash/env
-    volumes:
-      - /opt/redash/postgres-data:/var/lib/postgresql/data
-    restart: unless-stopped
+    image: postgres:9.5.6-alpine
+    ports:
+    - "5432:5432"
+
   nginx:
     image: redash/nginx:latest
     ports:
@@ -53,10 +48,3 @@ services:
       - server
     links:
       - server:redash
-    restart: always
-  worker:
-    <<: *redash-service
-    command: worker
-    environment:
-      QUEUES: "periodic,emails,default"
-      WORKERS_COUNT: 1
