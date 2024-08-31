@@ -1,11 +1,11 @@
 version: '2'
 services:
-  redash-server:
+  server:
     image: redash/redash:latest
     command: server
     depends_on:
-      - redash-postgres
-      - redash-redis
+      - postgres
+      - redis
     ports:
       - "5000:5000"
     environment:
@@ -17,8 +17,7 @@ services:
       REDASH_WEB_WORKERS: 4
       REDASH_MAIL_SERVER: "smtp2http"
       REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
-  
-  redash-worker:
+  worker:
     image: redash/redash:latest
     command: scheduler
     environment:
@@ -30,20 +29,17 @@ services:
       WORKERS_COUNT: 2
       REDASH_MAIL_SERVER: "smtp2http"
       REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
-  
-  redash-redis:
+  redis:
     image: redis:3.0-alpine
-
-  redash-postgres:
+  postgres:
     image: postgres:9.5.6-alpine
     ports:
     - "5432:5432"
-
-  redash-nginx:
+  nginx:
     image: redash/nginx:latest
     ports:
       - "80:80"
     depends_on:
-      - redash-server
+      - server
     links:
-      - redash-server:redash
+      - server:redash
