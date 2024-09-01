@@ -9,28 +9,30 @@ services:
       - redis
     ports:
       - "35000:5000"
+    env_file: /opt/redash/env
     environment:
       REDASH_WEB_WORKERS: 4
       PYTHONUNBUFFERED: 0
-      REDASH_LOG_LEVEL: "INFO"
-      REDASH_REDIS_URL: "redis://redis:6379/0"
-      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
-      REDASH_COOKIE_SECRET: REDASH_COOKIE_SECRET
-      REDASH_MAIL_SERVER: "smtp2http"
-      REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+      # REDASH_LOG_LEVEL: "INFO"
+      # REDASH_REDIS_URL: "redis://redis:6379/0"
+      # REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      # REDASH_COOKIE_SECRET: REDASH_COOKIE_SECRET
+      # REDASH_MAIL_SERVER: "smtp2http"
+      # REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
   
   worker:
     image: redash/redash:latest
     command: scheduler
+    env_file: /opt/redash/env
     environment:
       QUEUES: "queries,scheduled_queries,celery"
-      PYTHONUNBUFFERED: 0
-      REDASH_LOG_LEVEL: "INFO"
-      REDASH_REDIS_URL: "redis://redis:6379/0"
-      REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
       WORKERS_COUNT: 2
-      REDASH_MAIL_SERVER: "smtp2http"
-      REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+      PYTHONUNBUFFERED: 0
+      # REDASH_LOG_LEVEL: "INFO"
+      # REDASH_REDIS_URL: "redis://redis:6379/0"
+      # REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
+      # REDASH_MAIL_SERVER: "smtp2http"
+      # REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
   
   redis:
     # image: redis:3.0-alpine

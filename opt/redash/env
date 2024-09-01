@@ -8,4 +8,12 @@ REDASH_SECRET_KEY=REDASH_SECRET_KEY
 PG_PASSWORD=PG_PASSWORD
 # DATABASE_URL="postgresql://postgres:${PG_PASSWORD}@postgres/postgres"
 DATABASE_URL="postgresql://postgres:${PG_PASSWORD}@postgres/postgres"
+# REDASH_REDIS_URL: "redis://redis:6379/0"
+REDASH_REDIS_URL: "redis://redis:6379/0"
+# REDASH_MAIL_SERVER: "smtp2http"
+REDASH_MAIL_SERVER: "smtp2http"
+# REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+# REDASH_LOG_LEVEL: "INFO"
+REDASH_LOG_LEVEL: "INFO"
 GOOGLE_CLIENT_ID=GOOGLE_CLIENT_ID
