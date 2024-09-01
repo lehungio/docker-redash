@@ -10,12 +10,12 @@ services:
     ports:
       - "35000:5000"
     environment:
+      REDASH_WEB_WORKERS: 4
       PYTHONUNBUFFERED: 0
       REDASH_LOG_LEVEL: "INFO"
       REDASH_REDIS_URL: "redis://redis:6379/0"
       REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
       REDASH_COOKIE_SECRET: REDASH_COOKIE_SECRET
-      REDASH_WEB_WORKERS: 4
       REDASH_MAIL_SERVER: "smtp2http"
       REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
   
@@ -23,11 +23,11 @@ services:
     image: redash/redash:latest
     command: scheduler
     environment:
+      QUEUES: "queries,scheduled_queries,celery"
       PYTHONUNBUFFERED: 0
       REDASH_LOG_LEVEL: "INFO"
       REDASH_REDIS_URL: "redis://redis:6379/0"
       REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
-      QUEUES: "queries,scheduled_queries,celery"
       WORKERS_COUNT: 2
       REDASH_MAIL_SERVER: "smtp2http"
       REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
