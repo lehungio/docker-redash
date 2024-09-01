@@ -1,1 +1,2 @@
-/opt/redash/postgres-data/*
+docker/postgres/*
+docker/redash/*

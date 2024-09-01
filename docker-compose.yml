@@ -1,49 +1,43 @@
-# https://github.com/getredash/redash/wiki/Local-development-setup
+# Setup https://github.com/getredash/redash/wiki/Local-development-setup
+# Official https://github.com/getredash/setup/blob/master/data/compose.yaml
 services:
-  # docker-compose run --rm server create_db
-  server:
+  # docker-compose run --rm redash-server create_db
+  # docker-compose exec redash-server /bin/bash
+  redash-server:
     image: redash/redash:latest
     command: server
     depends_on:
-      - postgres
-      - redis
+      - redash-postgres
+      - redash-redis
     ports:
-      - "35000:5000"
-    env_file: /opt/redash/env
+      - "55000:5000"
+    env_file: .env
     environment:
       REDASH_WEB_WORKERS: 4
       PYTHONUNBUFFERED: 0
-      # REDASH_LOG_LEVEL: "INFO"
-      # REDASH_REDIS_URL: "redis://redis:6379/0"
-      # REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
-      # REDASH_COOKIE_SECRET: REDASH_COOKIE_SECRET
-      # REDASH_MAIL_SERVER: "smtp2http"
-      # REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
+    volumes:
+      - /docker/redash/app:/app
   
-  worker:
+  redash-worker:
     image: redash/redash:latest
     command: scheduler
-    env_file: /opt/redash/env
+    env_file: .env
     environment:
       QUEUES: "queries,scheduled_queries,celery"
       WORKERS_COUNT: 2
       PYTHONUNBUFFERED: 0
-      # REDASH_LOG_LEVEL: "INFO"
-      # REDASH_REDIS_URL: "redis://redis:6379/0"
-      # REDASH_DATABASE_URL: "postgresql://postgres@postgres/postgres"
-      # REDASH_MAIL_SERVER: "smtp2http"
-      # REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
   
-  redis:
-    # image: redis:3.0-alpine
+  redash-redis:
     image: redis:7-alpine
+    ports:
+    - "56379:6379"
     restart: unless-stopped
 
-  postgres:
-    # image: postgres:9.5.6-alpine
+  # docker-compose exec redash-postgres /bin/bash
+  redash-postgres:
     image: pgautoupgrade/pgautoupgrade:latest
     ports:
-    - "5432:5432"
-    env_file: /opt/redash/env
+    - "55432:5432"
+    env_file: .env
     volumes:
-      - /opt/redash/postgres-data:/var/lib/postgresql/data
+      - /docker/postgres/data:/var/lib/postgresql/data
