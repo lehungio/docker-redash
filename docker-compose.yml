@@ -4,6 +4,8 @@ services:
   # docker-compose run --rm redash-server create_db
   # docker-compose exec redash-server /bin/bash
   redash-server:
+    hostname: redash-server
+    container_name: redash-server
     image: redash/redash:latest
     command: server
     depends_on:
@@ -15,12 +17,15 @@ services:
     environment:
       REDASH_WEB_WORKERS: 4
       PYTHONUNBUFFERED: 0
-    volumes:
-      - /docker/redash/app:/app
   
   redash-worker:
+    hostname: redash-worker
+    container_name: redash-worker
     image: redash/redash:latest
     command: scheduler
+    depends_on:
+      - redash-postgres
+      - redash-redis
     env_file: .env
     environment:
       QUEUES: "queries,scheduled_queries,celery"
@@ -28,16 +33,22 @@ services:
       PYTHONUNBUFFERED: 0
   
   redash-redis:
+    hostname: redash-redis
+    container_name: redash-redis
     image: redis:7-alpine
+    # command: --port 56379 # insider default port
     ports:
-    - "56379:6379"
+     - "56379:6379"
     restart: unless-stopped
 
   # docker-compose exec redash-postgres /bin/bash
   redash-postgres:
+    hostname: redash-postgres
+    container_name: redash-postgres
     image: pgautoupgrade/pgautoupgrade:latest
+    # command: --port 55432
     ports:
-    - "55432:5432"
+     - "55432:5432"
     env_file: .env
     volumes:
-      - /docker/postgres/data:/var/lib/postgresql/data
+     - ./docker/postgres/data:/var/lib/postgresql/data

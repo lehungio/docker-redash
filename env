@@ -10,9 +10,9 @@ POSTGRES_HOST_AUTH_METHOD="trust"
 # PG_PASSWORD=$(pwgen -1s 32)
 POSTGRES_PASSWORD=POSTGRES_PASSWORD
 # DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD}@postgres/postgres"
-DATABASE_URL="postgresql://postgres:POSTGRES_PASSWORD@postgres:55432/postgres"
+DATABASE_URL="postgresql://postgres:POSTGRES_PASSWORD@redash-postgres:5432/postgres"
 # REDASH_REDIS_URL: "redis://redis:6379/0"
-REDASH_REDIS_URL: "redis://redis:56379/0"
+REDASH_REDIS_URL: "redis://redash-redis:6379/0"
 # REDASH_MAIL_SERVER: "smtp2http"
 REDASH_MAIL_SERVER: "smtp2http"
 # REDASH_MAIL_DEFAULT_SENDER: "me@lehungio.com"
