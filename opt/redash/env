@@ -7,7 +7,7 @@ REDASH_SECRET_KEY=REDASH_SECRET_KEY
 # PG_PASSWORD=$(pwgen -1s 32)
 PG_PASSWORD=PG_PASSWORD
 # DATABASE_URL="postgresql://postgres:${PG_PASSWORD}@postgres/postgres"
-DATABASE_URL="postgresql://postgres:${PG_PASSWORD}@postgres/postgres"
+DATABASE_URL="postgresql://postgres:PG_PASSWORD@postgres/postgres"
 # REDASH_REDIS_URL: "redis://redis:6379/0"
 REDASH_REDIS_URL: "redis://redis:6379/0"
 # REDASH_MAIL_SERVER: "smtp2http"
