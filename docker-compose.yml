@@ -43,12 +43,3 @@ services:
     env_file: /opt/redash/env
     volumes:
       - /opt/redash/postgres-data:/var/lib/postgresql/data
-
-  nginx:
-    image: redash/nginx:latest
-    ports:
-      - "80:80"
-    depends_on:
-      - server
-    links:
-      - server:redash
